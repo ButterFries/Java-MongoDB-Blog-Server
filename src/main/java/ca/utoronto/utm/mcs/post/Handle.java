@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
+import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import com.sun.net.httpserver.HttpExchange;
 
 import ca.utoronto.utm.mcs.Memory;
@@ -42,21 +44,17 @@ public class Handle {
         	throw new JSONException("JSON does not contain _id and/or name");
         
         
-        
         // If id and name given, query only for id, if no ID found respond with 400 and DON'T check names
         if (idGiven && nameGiven) {
+        	//id and name given, id found
         	if (ObjectId.isValid(id)) {
-        		Document send = new Document("_id", id);
-        		System.out.println(col.find(send).first()); //TODO null is being recieved
         		
-        		FindIterable<Document> rtn = col.find(send);
+        		FindIterable<Document> rtn = col.find(Filters.eq("_id", new ObjectId(id)));
+        		
         		JSONArray output = new JSONArray();
 
-        		for(Document d:rtn) {
-        			JSONObject tempJson = new JSONObject(d.toJson());
-        			output.put(tempJson);
-        			System.out.println(tempJson.toString());
-        		}
+        		for(Document d:rtn) 
+        			output.put(new JSONObject(d.toJson()));
         		
         		
         		String response = ""+output.toString();
@@ -66,16 +64,71 @@ public class Handle {
             	os.close();
         	}
         	else {
-        		System.out.println(-2);
+        		//id and name given, id does not exist
+        		String response = "";
+            	r.sendResponseHeaders(400, response.length());
+            	OutputStream os = r.getResponseBody();
+            	os.write(response.getBytes());
+            	os.close();
         	}
         }
+        
+        
         // If ONLY id given, respond with 404 if no posts found
         else if (idGiven) {
-        	//TODO
+        	//only id given, id found
+        	if (ObjectId.isValid(id)) {
+        		
+        		FindIterable<Document> rtn = col.find(Filters.eq("_id", new ObjectId(id)));
+        		
+        		JSONArray output = new JSONArray();
+
+        		for(Document d:rtn)
+        			output.put(new JSONObject(d.toJson()));
+        		
+        		
+        		String response = ""+output.toString();
+            	r.sendResponseHeaders(200, response.length());
+            	OutputStream os = r.getResponseBody();
+            	os.write(response.getBytes());
+            	os.close();
+        	}
+        	else {
+        		//only id given and id does not exist
+        		String response = "";
+            	r.sendResponseHeaders(404, response.length());
+            	OutputStream os = r.getResponseBody();
+            	os.write(response.getBytes());
+            	os.close();
+        	}
         }
         // If ONLY name given, respond with 404 if no posts found
         else {
-        	//TODO
+        	
+        	FindIterable<Document> rtn = col.find(Filters.regex("title", name));
+    		
+    		JSONArray output = new JSONArray();
+
+    		for(Document d:rtn) {
+    			output.put(new JSONObject(d.toJson()));
+    		}
+    		
+    		//Name matches at least 1 post
+    		if (output.length() > 0) {
+	    		String response = ""+output;
+	        	r.sendResponseHeaders(200, response.length());
+	        	OutputStream os = r.getResponseBody();
+	        	os.write(response.getBytes());
+	        	os.close();
+    		}
+    		//Name matches 0 posts
+    		else {
+    			String response = "";
+	        	r.sendResponseHeaders(404, response.length());
+	        	OutputStream os = r.getResponseBody();
+	        	os.write(response.getBytes());
+	        	os.close();
+    		}
         }
         
         
@@ -134,6 +187,7 @@ public class Handle {
 	}
 	
 	public static void handleDelete(HttpExchange r, MongoCollection<Document> col) throws JSONException, IOException {
+		
 		
 	}
 	
