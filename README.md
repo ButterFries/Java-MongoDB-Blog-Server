@@ -42,6 +42,13 @@ Default Address is Localhost and Port is 8080
 
 5. Run the project by pressing the green play button
 
+To configure dagger2:
+
+1. Install m2e-apt
+
+2. Window -> Preferences -> Maven -> Annotation Processing:
+Select "Automatically configure JDT APT"
+
 **Intellij**
 
 1. Import project
