@@ -9,8 +9,6 @@ import ca.utoronto.utm.mcs.post.Post;
 import dagger.Module;
 import dagger.Provides;
 
-import com.mongodb.MongoClientSettings;
-import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
@@ -28,8 +26,7 @@ public class DaggerModule {
     	try {
 			server = HttpServer.create(new InetSocketAddress("localhost", App.port), 0);
 			
-			Memory mem = new Memory();
-	        server.createContext("/api/v1/post", new Post(mem, db));
+	        server.createContext("/api/v1/post", new Post(db));
 			
 	        return server;
 		} 
