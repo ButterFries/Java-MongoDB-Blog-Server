@@ -11,31 +11,31 @@ import javax.inject.Provider;
   comments = "https://google.github.io/dagger"
 )
 public final class Dagger_Factory implements Factory<Dagger> {
-  private final Provider<HttpServer> serverProvider;
-
   private final Provider<MongoClient> dbProvider;
 
-  public Dagger_Factory(Provider<HttpServer> serverProvider, Provider<MongoClient> dbProvider) {
-    this.serverProvider = serverProvider;
+  private final Provider<HttpServer> serverProvider;
+
+  public Dagger_Factory(Provider<MongoClient> dbProvider, Provider<HttpServer> serverProvider) {
     this.dbProvider = dbProvider;
+    this.serverProvider = serverProvider;
   }
 
   @Override
   public Dagger get() {
-    return provideInstance(serverProvider, dbProvider);
+    return provideInstance(dbProvider, serverProvider);
   }
 
   public static Dagger provideInstance(
-      Provider<HttpServer> serverProvider, Provider<MongoClient> dbProvider) {
-    return new Dagger(serverProvider.get(), dbProvider.get());
+      Provider<MongoClient> dbProvider, Provider<HttpServer> serverProvider) {
+    return new Dagger(dbProvider.get(), serverProvider.get());
   }
 
   public static Dagger_Factory create(
-      Provider<HttpServer> serverProvider, Provider<MongoClient> dbProvider) {
-    return new Dagger_Factory(serverProvider, dbProvider);
+      Provider<MongoClient> dbProvider, Provider<HttpServer> serverProvider) {
+    return new Dagger_Factory(dbProvider, serverProvider);
   }
 
-  public static Dagger newDagger(HttpServer server, MongoClient db) {
-    return new Dagger(server, db);
+  public static Dagger newDagger(MongoClient db, HttpServer server) {
+    return new Dagger(db, server);
   }
 }
