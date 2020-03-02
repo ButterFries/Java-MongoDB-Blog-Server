@@ -44,16 +44,6 @@ public class Handle {
         
         // If id and name given, query only for id, if no ID found respond with 400 and DON'T check names
         if (idGiven && nameGiven) {
-        	//id and name given, id found
-        	if (ObjectId.isValid(id)) {
-        		
-        		FindIterable<Document> rtn = col.find(Filters.eq("_id", new ObjectId(id)));
-        		
-        		JSONArray output = new JSONArray();
-
-        		for(Document d:rtn) 
-        			output.put(new JSONObject(d.toJson()));
-        		
         	
         	// id is not valid type so no results will return
         	if (!ObjectId.isValid(id)) {
@@ -64,6 +54,10 @@ public class Handle {
 	            os.close();
 	            return;
         	}
+        	
+        	FindIterable<Document> rtn = col.find(Filters.eq("_id", new ObjectId(id)));
+        	
+        	JSONArray output = new JSONArray();
         	
         	for(Document d:rtn)
         		output.put(new JSONObject(d.toJson()));
@@ -130,44 +124,6 @@ public class Handle {
             	os.write(response.getBytes());
             	os.close();
         	}
-        }
-        
-        
-        // If ONLY id given, respond with 404 if no posts found
-        else if (idGiven) {
-        	//only id given, id found
-        	if (ObjectId.isValid(id)) {
-        		
-        		FindIterable<Document> rtn = col.find(Filters.eq("_id", new ObjectId(id)));
-        		
-        		JSONArray output = new JSONArray();
-
-        		for(Document d:rtn)
-        			output.put(new JSONObject(d.toJson()));
-        		
-        		
-        		String response = ""+output.toString();
-            	r.sendResponseHeaders(200, response.length());
-            	OutputStream os = r.getResponseBody();
-            	os.write(response.getBytes());
-            	os.close();
-        	}
-        	else {
-        		//only id given and id does not exist
-        		String response = "";
-            	r.sendResponseHeaders(404, response.length());
-            	OutputStream os = r.getResponseBody();
-            	os.write(response.getBytes());
-            	os.close();
-        	}
-        }
-        		//only id given and id does not exist
-        		String response = "";
-            	r.sendResponseHeaders(404, response.length());
-            	OutputStream os = r.getResponseBody();
-            	os.write(response.getBytes());
-            	os.close();
-            	return;
         }
         // If ONLY name given, respond with 404 if no posts found
         else {
