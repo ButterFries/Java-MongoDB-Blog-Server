@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
-import org.bson.json.JsonWriterSettings;
 import org.bson.types.ObjectId;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,7 +25,7 @@ public class Handle {
 		String body = Utils.convert(r.getRequestBody());
         JSONObject deserialized = new JSONObject(body);
         
-        boolean found = false, idGiven = false, nameGiven = false;
+        boolean idGiven = false, nameGiven = false;
         
         String id = "", name = "";
         
