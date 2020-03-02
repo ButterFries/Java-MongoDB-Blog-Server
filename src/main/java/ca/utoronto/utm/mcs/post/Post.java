@@ -3,28 +3,18 @@ package ca.utoronto.utm.mcs.post;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.bson.Document;
 import org.json.*;
 
 import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-import ca.utoronto.utm.mcs.Dagger;
-import ca.utoronto.utm.mcs.DaggerDaggerComponent;
-import ca.utoronto.utm.mcs.Memory;
-
-import ca.utoronto.utm.mcs.post.*;
-
 public class Post implements HttpHandler
 {
-    private static Memory memory;
     private static MongoClient db;
 
-    public Post(Memory mem, MongoClient db) {
+    public Post(MongoClient db) {
     	Post.db = db;
-        memory = mem;
     }
 
     public void handle(HttpExchange r) throws IOException {
@@ -54,16 +44,23 @@ public class Post implements HttpHandler
         	OutputStream os = r.getResponseBody();
         	os.write(response.getBytes());
         	os.close();
+		} catch (Exception e) {
+			//400 INTERNAL SERVER ERROR
+        	String response = "";
+        	r.sendResponseHeaders(500, response.length());
+        	OutputStream os = r.getResponseBody();
+        	os.write(response.getBytes());
+        	os.close();
 		}
     }
 
-    private void handlePut(HttpExchange r) throws IOException, JSONException {
+    private void handlePut(HttpExchange r) throws IOException, JSONException, Exception {
     	Handle.handlePut(r, db.getDatabase("csc301a2").getCollection("posts"));
     }
-    private void handleGet(HttpExchange r) throws IOException, JSONException {
+    private void handleGet(HttpExchange r) throws IOException, JSONException, Exception {
     	Handle.handleGet(r, db.getDatabase("csc301a2").getCollection("posts"));
     }
-    private void handleDelete(HttpExchange r) throws IOException, JSONException {
+    private void handleDelete(HttpExchange r) throws IOException, JSONException, Exception {
 		Handle.handleDelete(r, db.getDatabase("csc301a2").getCollection("posts"));
 	}
     
