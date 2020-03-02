@@ -1,33 +1,36 @@
-#MongoDB Blog Post API
+**MongoDB Blog Post API**
 
-##A RESTful http java blog post api built using Dagger2 and Mongo DB 4.2.3
+A RESTful http java blog post api built using Dagger2 and Mongo DB 4.2.3
 
-##**Prerequisites:**
+Default Address is Localhost and Port is 8080
+
+
+**Prerequisites:**
 
 1. Install MongoDB Community Server https://www.mongodb.com/download-center/community
 
-2. (Optional) Install MongoDB Compass
+2. (Optional) Install MongoDB Compass https://www.mongodb.com/products/compass
 
-3. (Optional) Install Postman
+3. (Optional) Install Postman https://www.postman.com/downloads/
 
-4. Install Java JDK8
+4. Install Java JDK8 https://www.oracle.com/java/technologies/javase-downloads.html
 
-5. Install Maven
+5. Install Maven http://maven.apache.org/download.cgi
 
-6. (Optional) Install Eclipse
-
-
+6. (Optional) Install Eclipse https://www.eclipse.org/downloads/
 
 
-##**How to compile and run:**
 
-###**CMD Line:**
+
+**How to compile and run:**
+
+**CMD Line:**
 
 1. Run "mvn compile" in the root directory
 
 2. Run the project by running "mvn exec:java"
 
-###**Eclipse:**
+**Eclipse:**
 
 1. File -> Import -> Maven -> Existing Maven Projects
 
@@ -39,7 +42,7 @@
 
 5. Run the project by pressing the green play button
 
-###**Intellij**
+**Intellij**
 
 1. Import project
 
@@ -59,17 +62,17 @@
 
 
 
-##**How to hit server endpoints:**
+**How to hit server endpoints:**
 
-###**Command line:**
+**Command line:**
 
 curl -X POST http://localhost:8080/api/v1/endpoint/ --data \
-’{ "key": "value", "other": "thing" }’
+â€™{ "key": "value", "other": "thing" }â€™
 
 The -X flag specifies the REST action you wish to use.
 And the --data flag specifies the body of the request
 
-###**Postman:**
+**Postman:**
 
 1. Open postman and select request you'd like
 
@@ -81,22 +84,22 @@ And the --data flag specifies the body of the request
 
 5. Click send
 
-###**Python:**
+**Python:**
 
 import requests
 d = { "key": "value" }
-requests.put(’http://localhost:8080/api/v1/endpoint’, json=d)
+requests.put(â€™http://localhost:8080/api/v1/endpointâ€™, json=d)
 
 The dictionary is the desired JSON request body
 Can change requests.put(...) to requests.get(...) and requests.post(...)
 
 
 
-##**Commands:**
+**Commands:**
 
-###**PUT /api/v1/post**
+**PUT /api/v1/post**
 
-####JSON Request Body:
+JSON Request Body:
 {
 "title": String,
 "author": String,
@@ -108,16 +111,16 @@ String,
 ]
 }
 
-####JSON Response Body:
+JSON Response Body:
 {
 "_id": String
 }
 
 
 
-###**GET /api/v1/post**
+**GET /api/v1/post**
 
-####JSON Request Body:
+JSON Request Body:
 {
 "title": String
 }
@@ -131,7 +134,7 @@ OR
 "title": String
 }
 
-####JSON Response Body:
+JSON Response Body:
 [
 {
 "_id": {
@@ -151,19 +154,19 @@ String,
 
 
 
-###**DELETE /api/v1/post**
+**DELETE /api/v1/post**
 
-####JSON Request Body:
+JSON Request Body:
 {
 "_id": String
 }
 
-####JSON Response Body:
+JSON Response Body:
 N/A
 
 
 
-##**Responses:**
+**Responses:**
 - 200 OK for a successful add
 - 400 BAD REQUEST if the request body is improperly formatted or missing required information
 - 500 INTERNAL SERVER ERROR if save or add was unsuccessful but the request was valid
